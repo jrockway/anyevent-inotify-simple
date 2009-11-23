@@ -22,7 +22,6 @@ class AnyEvent::Inotify::Simple {
     use Linux::Inotify2;
     use File::Next;
 
-
     has_directory 'directory' => ( must_exist => 1, required => 1);
 
     has 'filter' => (
@@ -40,6 +39,7 @@ class AnyEvent::Inotify::Simple {
     has 'inotify' => (
         is         => 'ro',
         isa        => 'Linux::Inotify2',
+        handles    => [qw/poll fileno watch/],
         lazy_build => 1,
     );
 
@@ -72,9 +72,9 @@ class AnyEvent::Inotify::Simple {
 
     method _build_io_watcher {
         return AnyEvent->io(
-            fh   => $self->inotify->fileno,
+            fh   => $self->fileno,
             poll => 'r',
-            cb   => sub { $self->inotify->poll },
+            cb   => sub { $self->poll },
         );
     }
 
@@ -99,7 +99,7 @@ class AnyEvent::Inotify::Simple {
                 $entry = Path::Class::file($entry);
             }
 
-            $self->inotify->watch(
+            $self->watch(
                 $entry->stringify,
                 IN_ALL_EVENTS,
                 sub { $self->handle_event($entry, $_[0]) },
