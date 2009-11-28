@@ -1,7 +1,6 @@
 use MooseX::Declare;
 
 class AnyEvent::Inotify::Simple {
-    use MooseX::MultiMethods;
     use MooseX::FileAttribute;
     use MooseX::Types::Path::Class qw(File Dir);
     use MooseX::Types::Moose qw(RegexpRef HashRef CodeRef);
@@ -21,20 +20,19 @@ class AnyEvent::Inotify::Simple {
     use AnyEvent;
     use Linux::Inotify2;
     use File::Next;
+    use Path::Filter;
 
     has_directory 'directory' => ( must_exist => 1, required => 1);
 
     has 'filter' => (
         is       => 'ro',
-        isa      => RegexpRef,
+        isa      => 'Path::Filter',
         required => 1,
-        default  => sub { qr/.*/ },
+        default  => sub { Path::Filter->new( rules => [qw/Backup VersionControl EditorJunk/] ) },
+        handles  => {
+            is_filtered => 'filter',
+        },
     );
-
-    method is_filtered(File|Dir $file){
-        my $rx = $self->filter;
-        return $file->stringify !~ /$rx/;
-    }
 
     has 'inotify' => (
         is         => 'ro',
