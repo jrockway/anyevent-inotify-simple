@@ -34,7 +34,16 @@ class AnyEvent::Inotify::Simple {
         },
     );
 
+    has 'event_receiver' => (
+        is       => 'ro',
+        isa      => Receiver,
+        handles  => 'AnyEvent::Inotify::EventReceiver',
+        required => 1,
+        coerce   => 1,
+    );
+
     has 'inotify' => (
+        init_arg   => undef,
         is         => 'ro',
         isa        => 'Linux::Inotify2',
         handles    => [qw/poll fileno watch/],
@@ -52,22 +61,6 @@ class AnyEvent::Inotify::Simple {
         required => 1,
     );
 
-    has 'event_receiver' => (
-        is       => 'ro',
-        isa      => Receiver,
-        handles  => 'AnyEvent::Inotify::EventReceiver',
-        required => 1,
-        coerce   => 1,
-    );
-
-    has [qw/cookie_jar/] => (
-        init_arg => undef,
-        is       => 'ro',
-        isa      => HashRef,
-        required => 1,
-        default  => sub { +{} },
-    );
-
     method _build_io_watcher {
         return AnyEvent->io(
             fh   => $self->fileno,
@@ -76,6 +69,13 @@ class AnyEvent::Inotify::Simple {
         );
     }
 
+    has 'cookie_jar' => (
+        init_arg => undef,
+        is       => 'ro',
+        isa      => HashRef,
+        required => 1,
+        default  => sub { +{} },
+    );
 
     # faking creation events when a new dir is seen is from
     # File::ChangeNotify, but I am not sure that I like the idea... so
