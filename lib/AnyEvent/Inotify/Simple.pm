@@ -77,13 +77,8 @@ class AnyEvent::Inotify::Simple {
         default  => sub { +{} },
     );
 
-    # faking creation events when a new dir is seen is from
-    # File::ChangeNotify, but I am not sure that I like the idea... so
-    # it is not really implemented here yet
-    method _watch_directory(Dir $dir, Bool $fake_creates? = 0) {
-        my $maker = $fake_creates ? \&File::Next::everything : \&File::Next::dirs;
-
-        my $next = $maker->( {
+    method _watch_directory(Dir $dir){
+        my $next = File::Next::dirs({
             follow_symlinks => 0,
         }, $dir);
 
@@ -106,7 +101,7 @@ class AnyEvent::Inotify::Simple {
     }
 
     method BUILD {
-        $self->_watch_directory($self->directory->resolve->absolute, 0);
+        $self->_watch_directory($self->directory->resolve->absolute);
     }
 
     my %events = (
@@ -132,23 +127,24 @@ class AnyEvent::Inotify::Simple {
 
         return if $self->is_filtered($event_file);
 
+        my $relative = $event_file->relative($self->directory);
         my $handled = 0;
 
         for my $type (keys %events){
             my $method = $events{$type};
             if( $event->$type ){
-                $self->$method($event_file);
+                $self->$method($relative);
                 $handled = 1;
             }
         }
 
         if( $event->IN_MOVED_FROM ){
-            $self->handle_move_from($event_file, $event->cookie);
+            $self->handle_move_from($relative, $event->cookie);
             $handled = 1;
         }
 
         if( $event->IN_MOVED_TO ){
-            $self->handle_move_to($event_file, $event->cookie);
+            $self->handle_move_to($relative, $event->cookie);
             $handled = 1;
         }
 
@@ -160,23 +156,30 @@ class AnyEvent::Inotify::Simple {
 
     }
 
+    method rel2abs(File|Dir $file){
+        return $file if $file->is_absolute;
+        return $file->absolute($self->directory)->resolve->absolute;
+    }
+
     method handle_move_from(File|Dir $file, Int $cookie){
         $self->cookie_jar->{from}{$cookie} = $file;
     }
 
     method handle_move_to(File|Dir $to, Int $cookie){
         my $from = delete $self->cookie_jar->{from}{$cookie};
-        confess "Invalid move cookie '$cookie' (moved to -> '$to')"
+        confess "Invalid move cookie '$cookie' (moved to '$to')"
           unless $from;
 
-        $self->_watch_directory($to) if -d $to;
+        my $abs = $self->rel2abs($to);
+        $self->_watch_directory($abs) if -d $abs;
 
         $self->handle_move($from, $to);
     }
 
-    # now we inject our magic
+    # inject our magic
     before handle_create(File|Dir $dir){
-        return unless -d $dir;
-        $self->_watch_directory($dir);
+        my $abs = $self->rel2abs($dir);
+        return unless -d $abs;
+        $self->_watch_directory($abs);
     }
 }

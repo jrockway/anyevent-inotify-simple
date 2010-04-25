@@ -49,7 +49,7 @@ role t::lib::Base {
                     return if $type !~ /$f/;
                     push @{$self->state}, [
                         $type,
-                        map { $_->relative($self->base)->stringify } @args,
+                        map { $_->stringify } @args,
                     ];
                     $self->end;
                 },
