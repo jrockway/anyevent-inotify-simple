@@ -84,6 +84,7 @@ class AnyEvent::Inotify::Simple {
 
         while ( my $entry = $next->() ) {
             last unless defined $entry;
+            next if $self->is_filtered($entry);
 
             if( -d $entry ){
                 $entry = Path::Class::dir($entry);
@@ -125,7 +126,11 @@ class AnyEvent::Inotify::Simple {
             return;
         }
 
-        return if $self->is_filtered($event_file);
+        if($self->is_filtered($event_file)){
+            # we get this when a directory watcher notices something
+            # about a file that should be ignored
+            return;
+        }
 
         my $relative = $event_file->relative($self->directory);
         my $handled = 0;
