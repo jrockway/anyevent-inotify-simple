@@ -27,8 +27,14 @@ class AnyEvent::Inotify::Simple {
     has 'filter' => (
         is       => 'ro',
         isa      => 'Path::Filter',
-        required => 1,
-        default  => sub { Path::Filter->new( rules => [qw/Backup VersionControl EditorJunk/] ) },
+        lazy     => 1,
+        default  => sub {
+            my $self = shift;
+            return Path::Filter->new(
+                rules => [qw/Backup VersionControl EditorJunk/],
+                root  => $self->directory,
+            );
+        },
         handles  => {
             is_filtered => 'filter',
         },
