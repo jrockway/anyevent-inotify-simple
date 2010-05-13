@@ -193,4 +193,10 @@ class AnyEvent::Inotify::Simple {
         return unless -d $abs;
         $self->_watch_directory($abs);
     }
+
+    method DEMOLISH {
+        for my $w (values %{$self->inotify->{w}}){
+            $w->cancel;
+        }
+    }
 }
