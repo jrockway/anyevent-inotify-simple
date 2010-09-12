@@ -1,12 +1,16 @@
-use MooseX::Declare;
+package AnyEvent::Inotify::EventReceiver::Null;
+use Moose;
+use namespace::autoclean;
 
-class AnyEvent::Inotify::EventReceiver::Null with AnyEvent::Inotify::EventReceiver {
-    method handle_access {}
-    method handle_modify {}
-    method handle_attribute_change {}
-    method handle_close {}
-    method handle_open {}
-    method handle_move {}
-    method handle_delete {}
-    method handle_create {}
-}
+with 'AnyEvent::Inotify::EventReceiver';
+
+sub handle_access {}
+sub handle_modify {}
+sub handle_attribute_change {}
+sub handle_close {}
+sub handle_open {}
+sub handle_move {}
+sub handle_delete {}
+sub handle_create {}
+
+1;
