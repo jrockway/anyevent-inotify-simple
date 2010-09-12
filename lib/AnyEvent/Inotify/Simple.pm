@@ -20,25 +20,18 @@ coerce Receiver, from CodeRef, via {
 use AnyEvent;
 use Linux::Inotify2;
 use File::Next;
-use Path::Filter;
 
 use namespace::clean -except => ['meta'];
 
 has_directory 'directory' => ( must_exist => 1, required => 1);
 
 has 'filter' => (
+    traits   => ['Code'],
     is       => 'ro',
-    isa      => 'Path::Filter',
-    lazy     => 1,
+    isa      => CodeRef,
+    handles  => { is_filtered => 'execute' },
     default  => sub {
-        my $self = shift;
-        return Path::Filter->new(
-            rules => [qw/Backup VersionControl EditorJunk/],
-            root  => $self->directory,
-        );
-    },
-    handles  => {
-        is_filtered => 'filter',
+        sub { return 0 },
     },
 );
 

@@ -4,7 +4,6 @@ use Test::More;
 
 use AnyEvent::Inotify::Simple;
 use Directory::Scratch;
-use Path::Filter;
 
 use MooseX::Declare;
 
@@ -19,9 +18,7 @@ my $mock = class AIS extends AnyEvent::Inotify::Simple {
 my $notify = $mock->meta->name->new(
     directory      => "$tmp",
     event_receiver => sub { $event = [@_] },
-    filter         => Path::Filter->new(
-        rules => [qw/Backup VersionControl::Git/],
-    ),
+    filter         => sub { my $file = shift; $file =~ /~$|.git/ },
 );
 
 ok $notify;

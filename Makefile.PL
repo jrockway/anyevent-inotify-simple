@@ -4,15 +4,15 @@ use strict;
 name 'AnyEvent-Inotify-Simple';
 all_from 'lib/AnyEvent/Inotify/Simple.pm';
 
-requires 'MooseX::Declare';
 requires 'AnyEvent';
-requires 'Linux::Inotify2';
 requires 'File::Next';
-requires 'MooseX::Types::Path::Class';
+requires 'Linux::Inotify2';
 requires 'MooseX::FileAttributes';
-requires 'Path::Filter';
+requires 'MooseX::Types::Path::Class';
 
-test_requires 'Test::More';
 test_requires 'EV';
+test_requires 'MooseX::Declare'; # I'm lazy.
+test_requires 'Test::More';
+test_requires 'Test::Sweet';
 
 WriteAll;
