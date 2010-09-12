@@ -7,7 +7,7 @@ all_from 'lib/AnyEvent/Inotify/Simple.pm';
 requires 'AnyEvent';
 requires 'File::Next';
 requires 'Linux::Inotify2';
-requires 'MooseX::FileAttributes';
+requires 'MooseX::FileAttribute';
 requires 'MooseX::Types::Path::Class';
 
 test_requires 'EV';
