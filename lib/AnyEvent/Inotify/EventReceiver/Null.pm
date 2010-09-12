@@ -14,3 +14,10 @@ sub handle_delete {}
 sub handle_create {}
 
 1;
+
+__END__
+
+=head1 NAME
+
+AnyEvent::Inotify::EventReceiver::Null - does nothing
+

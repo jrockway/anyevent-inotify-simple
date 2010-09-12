@@ -46,3 +46,9 @@ sub handle_create {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+AnyEvent::Inotify::EventReceiver::Debug - carps with an infomative message whenever an event is called

@@ -1,9 +1,10 @@
 package AnyEvent::Inotify::Simple;
 use Moose;
 
+our $VERSION = '0.01';
+
 use MooseX::FileAttribute;
-use MooseX::Types::Path::Class qw(File Dir);
-use MooseX::Types::Moose qw(RegexpRef HashRef CodeRef);
+use MooseX::Types::Moose qw(HashRef CodeRef);
 use MooseX::Types -declare => ['Receiver'];
 
 use AnyEvent::Inotify::EventReceiver;
@@ -215,3 +216,62 @@ sub DEMOLISH {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+AnyEvent::Inotify::Simple - monitor a directory tree in a non-blocking way
+
+=head1 SYNOPSIS
+
+   use AnyEvent::Inotify::Simple;
+   use EV; # or POE, or Event, or ...
+
+   my $inotify = AnyEvent::Inotify::Simple->new(
+       directory      => '/tmp/uploads/',
+       event_receiver => sub {
+           my ($event, $file, $moved_to) = @_;
+           given($event) {
+               when('create'){
+                  say "Someone just uploaded $file!"
+               }
+           };
+       },
+   );
+
+   EV::loop;
+
+=head1 DESCRIPTION
+
+This module is a wrapper around L<Linux::Inotify2> that integrates it
+with an L<AnyEvent> event loop and makes monitoring a directory
+simple.  Provide it with a C<directory>, C<event_receiver>
+(L<AnyEvent::Inotify::Simple::EventReceiver>), and an optional coderef
+C<filter>, and it will monitor an entire directory tree.  If something
+is added, it will start watching it.  If something goes away, it will
+stop watching it.  It also converts C<IN_MOVE_FROM> and C<IN_MOVE_TO>
+into one virtual event.
+
+Someday I will write more, but that's really all that happens!
+
+=head1 METHODS
+
+None!  Create the object, and it starts working immediately.  Destroy
+the object, and the inotify state and watchers are automatically
+cleaned up.
+
+=head1 REPOSITORY
+
+Forks welcome!
+
+L<http://github.com/jrockway/anyevent-inotify-simple>
+
+=head1 AUTHOR
+
+Jonathan Rockway C<< <jrockway@cpan.org> >>
+
+=head1 COPYRIGHT
+
+Copyright 2009 (c) Jonathan Rockway.  This module is Free Software.
+You may redistribute it under the same terms as Perl itself.

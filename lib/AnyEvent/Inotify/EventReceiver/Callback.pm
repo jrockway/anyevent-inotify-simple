@@ -24,3 +24,22 @@ for my $event (qw/access modify attribute_change close open move delete create/)
 with 'AnyEvent::Inotify::EventReceiver';
 
 1;
+
+__END__
+
+=head1 NAME
+
+AnyEvent::Inotify::EventReceiver::Callback - delegates everything to a coderef
+
+=head1 INITARGS
+
+=head2 callback
+
+Coderef to be called when an event is received.
+
+=head1 DESCRIPTION
+
+This EventReceiver delegates every event to the C<callback> coderef.
+The coderef gets the name of the event being delegated (access,
+modify, attribute_change, ...) and the args that that event handler
+would normally get.
