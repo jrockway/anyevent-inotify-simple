@@ -10,6 +10,7 @@ requires 'Linux::Inotify2';
 requires 'MooseX::FileAttribute';
 requires 'MooseX::Types::Path::Class';
 
+test_requires 'Directory::Scratch';
 test_requires 'EV';
 test_requires 'MooseX::Declare'; # I'm lazy.
 test_requires 'Test::More';
