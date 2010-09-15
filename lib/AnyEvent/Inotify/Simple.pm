@@ -1,7 +1,7 @@
 package AnyEvent::Inotify::Simple;
 use Moose;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use MooseX::FileAttribute;
 use MooseX::Types::Moose qw(HashRef CodeRef);

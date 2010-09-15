@@ -1,4 +1,7 @@
 Change history for AnyEvent-Inotify-Simple
 
+0.02 Wed Sep 15 05:15:13 CDT 2010
+  - fix prereqs; no code changes
+
 0.01 Sun Sep 12 04:10:45 CDT 2010
   - initial release
