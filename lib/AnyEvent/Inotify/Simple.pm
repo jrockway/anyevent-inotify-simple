@@ -226,7 +226,6 @@ AnyEvent::Inotify::Simple - monitor a directory tree in a non-blocking way
 =head1 SYNOPSIS
 
    use AnyEvent::Inotify::Simple;
-   use EV; # or POE, or Event, or ...
 
    my $inotify = AnyEvent::Inotify::Simple->new(
        directory      => '/tmp/uploads/',
@@ -240,7 +239,7 @@ AnyEvent::Inotify::Simple - monitor a directory tree in a non-blocking way
        },
    );
 
-   EV::loop;
+   AnyEvent->condvar->recv;
 
 =head1 DESCRIPTION
 
