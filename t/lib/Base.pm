@@ -4,7 +4,6 @@ role t::lib::Base {
     use AnyEvent;
     use AnyEvent::Inotify::Simple;
     use Directory::Scratch;
-    use Test::Sweet;
 
     has 'tmpdir' => (
         is       => 'ro',
@@ -68,7 +67,7 @@ role t::lib::Base {
         $self->poll;
     }
 
-    test main {
+    method main {
         $self->begin;
         $self->do_test;
         $self->end;

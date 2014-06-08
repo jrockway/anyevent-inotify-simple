@@ -1,7 +1,7 @@
 use MooseX::Declare;
 
 class t::MoveFile with t::lib::Base {
-    use Test::Sweet;
+    use Test::More;
 
     method _build_type_filter { qr/create|move/ }
 

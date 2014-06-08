@@ -1,8 +1,7 @@
 use MooseX::Declare;
 
 class t::Create with t::lib::Base {
-    use Test::Sweet;
-    use EV;
+    use Test::More;
 
     method _build_type_filter { qr/create/ }
 
