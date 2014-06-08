@@ -210,8 +210,9 @@ before 'handle_create' => sub {
 
 sub DEMOLISH {
     my $self = shift;
-
+    return unless $self->inotify;
     for my $w (values %{$self->inotify->{w}}){
+        next unless $w;
         $w->cancel;
     }
 }
