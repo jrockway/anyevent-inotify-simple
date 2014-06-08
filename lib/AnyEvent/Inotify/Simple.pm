@@ -194,8 +194,8 @@ sub handle_move_to {
     confess "Invalid move cookie '$cookie' (moved to '$to')"
         unless $from;
 
-    my $abs = $self->rel2abs($to);
-    $self->_watch_directory($abs) if -d $abs;
+    my $abs = eval { $self->rel2abs($to) };
+    $self->_watch_directory($abs) if $abs && -d $abs;
 
     $self->handle_move($from, $to);
 }
@@ -203,8 +203,8 @@ sub handle_move_to {
 # inject our magic
 before 'handle_create' => sub {
     my ($self, $dir) = @_;
-    my $abs = $self->rel2abs($dir);
-    return unless -d $abs;
+    my $abs = eval { $self->rel2abs($dir) };
+    return unless $abs && -d $abs;
     $self->_watch_directory($abs);
 };
 
