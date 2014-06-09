@@ -1,4 +1,5 @@
 package AnyEvent::Inotify::EventReceiver;
+
 use Moose::Role;
 
 requires 'handle_access';

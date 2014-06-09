@@ -1,4 +1,5 @@
 package AnyEvent::Inotify::EventReceiver::Debug;
+
 use Moose;
 use namespace::autoclean;
 
@@ -52,3 +53,5 @@ __END__
 =head1 NAME
 
 AnyEvent::Inotify::EventReceiver::Debug - carps with an infomative message whenever an event is called
+
+=head1 ABSTRACT

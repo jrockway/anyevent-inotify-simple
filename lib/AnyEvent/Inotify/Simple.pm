@@ -1,7 +1,8 @@
 package AnyEvent::Inotify::Simple;
+
 use Moose;
 
-our $VERSION = '0.02';
+# ABSTRACT: monitor a directory tree in a non-blocking way
 
 use MooseX::FileAttribute;
 use MooseX::Types::Moose qw(HashRef CodeRef);
@@ -226,6 +227,7 @@ AnyEvent::Inotify::Simple - monitor a directory tree in a non-blocking way
 =head1 SYNOPSIS
 
    use AnyEvent::Inotify::Simple;
+   use EV; # or POE, or Event, or ...
 
    my $inotify = AnyEvent::Inotify::Simple->new(
        directory      => '/tmp/uploads/',
@@ -239,7 +241,7 @@ AnyEvent::Inotify::Simple - monitor a directory tree in a non-blocking way
        },
    );
 
-   AnyEvent->condvar->recv;
+   EV::loop;
 
 =head1 DESCRIPTION
 

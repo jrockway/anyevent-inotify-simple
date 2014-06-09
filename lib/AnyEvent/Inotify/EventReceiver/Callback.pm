@@ -1,4 +1,5 @@
 package AnyEvent::Inotify::EventReceiver::Callback;
+
 use Moose;
 #use namespace::autoclean;
 
@@ -30,6 +31,8 @@ __END__
 =head1 NAME
 
 AnyEvent::Inotify::EventReceiver::Callback - delegates everything to a coderef
+
+=head1 ABSTRACT
 
 =head1 INITARGS
 

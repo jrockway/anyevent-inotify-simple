@@ -1,4 +1,5 @@
 package AnyEvent::Inotify::EventReceiver::Null;
+
 use Moose;
 use namespace::autoclean;
 
@@ -21,3 +22,4 @@ __END__
 
 AnyEvent::Inotify::EventReceiver::Null - does nothing
 
+=head1 ABSTRACT
