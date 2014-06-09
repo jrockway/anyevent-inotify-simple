@@ -273,6 +273,8 @@ L<http://github.com/jrockway/anyevent-inotify-simple>
 
 Jonathan Rockway C<< <jrockway@cpan.org> >>
 
+Current maintainer is Robert Norris C<< <rob@eatenbyagrue.org> >>
+
 =head1 COPYRIGHT
 
 Copyright 2009 (c) Jonathan Rockway.  This module is Free Software.
