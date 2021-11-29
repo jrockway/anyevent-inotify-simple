@@ -5,7 +5,7 @@ use Moose;
 # ABSTRACT: monitor a directory tree in a non-blocking way
 
 use MooseX::FileAttribute;
-use MooseX::Types::Moose qw(HashRef CodeRef);
+use MooseX::Types::Moose qw(HashRef CodeRef ArrayRef Int);
 use MooseX::Types -declare => ['Receiver'];
 
 use AnyEvent::Inotify::EventReceiver;
@@ -62,6 +62,42 @@ sub _build_inotify {
     return $inotify;
 }
 
+has 'wanted_events' => (
+    is         => 'ro',
+    isa        => ArrayRef,
+    default => sub {
+      [ qw(access modify attribute_change close_write close_nowrite open create delete move) ]
+    },
+);
+
+has '_wanted_events_mask' => (
+    is         => 'ro',
+    isa        => Int,
+    lazy_build => 1,
+);
+
+my %event_to_mask = (
+    access           => IN_ACCESS,
+    modify           => IN_MODIFY,
+    attribute_change => IN_ATTRIB,
+    close_write      => IN_CLOSE_WRITE,
+    close_nowrite    => IN_CLOSE_NOWRITE,
+    open             => IN_OPEN,
+    create           => IN_CREATE,
+    delete           => IN_DELETE,
+    move             => IN_MOVED_FROM | IN_MOVED_TO,
+);
+
+sub _build__wanted_events_mask {
+    my $mask = 0;
+    for (@{$_[0]->wanted_events}) {
+        my $event_mask = $event_to_mask{$_}
+            || die "Unknown wanted event: $_";
+        $mask |= $event_mask;
+    }
+    return $mask;
+}
+
 has 'io_watcher' => (
     init_arg => undef,
     is       => 'ro',
@@ -107,7 +143,7 @@ sub _watch_directory {
 
         $self->watch(
             $entry->stringify,
-            IN_ALL_EVENTS,
+            $self->_wanted_events_mask,
             sub { $self->handle_event($entry, $_[0]) },
         );
     }
@@ -236,6 +272,7 @@ AnyEvent::Inotify::Simple - monitor a directory tree in a non-blocking way
 
    my $inotify = AnyEvent::Inotify::Simple->new(
        directory      => '/tmp/uploads/',
+       wanted_events  => [ qw(create move) ],
        event_receiver => sub {
            my ($event, $file, $moved_to) = @_;
            given($event) {
@@ -254,7 +291,8 @@ This module is a wrapper around L<Linux::Inotify2> that integrates it
 with an L<AnyEvent> event loop and makes monitoring a directory
 simple.  Provide it with a C<directory>, C<event_receiver>
 (L<AnyEvent::Inotify::Simple::EventReceiver>), and an optional coderef
-C<filter>, and it will monitor an entire directory tree.  If something
+C<filter> and/or optional array ref C<wanted_events>, and it will
+monitor an entire directory tree.  If something
 is added, it will start watching it.  If something goes away, it will
 stop watching it.  It also converts C<IN_MOVE_FROM> and C<IN_MOVE_TO>
 into one virtual event.
