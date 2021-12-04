@@ -56,7 +56,10 @@ has 'inotify' => (
 sub _build_inotify {
     my $self = shift;
 
-    Linux::Inotify2->new or confess "Inotify initialization failed: $!";
+    my $inotify = Linux::Inotify2->new or confess "Inotify initialization failed: $!";
+    # Ignore overflows, rather than broadcasting to every watcher
+    $inotify->on_overflow(sub {});
+    return $inotify;
 }
 
 has 'io_watcher' => (
