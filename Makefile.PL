@@ -33,6 +33,7 @@ my %WriteMakefileArgs = (
     "Directory::Scratch" => 0,
     "MooseX::Declare" => 0,
     "Test::More" => 0,
+    "lib" => 0,
     "strict" => 0,
     "warnings" => 0
   },
@@ -57,6 +58,7 @@ my %FallbackPrereqs = (
   "MooseX::Types" => 0,
   "MooseX::Types::Moose" => 0,
   "Test::More" => 0,
+  "lib" => 0,
   "namespace::autoclean" => 0,
   "namespace::clean" => 0,
   "strict" => 0,

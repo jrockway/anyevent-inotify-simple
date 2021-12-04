@@ -1,6 +1,7 @@
 Change history for AnyEvent-Inotify-Simple
 
 {{$NEXT}}
+  - get tests working again under Perl 5.26+
 
 0.03      2014-06-09 20:56:31+10:00 Australia/Melbourne
   - handle new file disappearing quickly while we're checking to see if its a
