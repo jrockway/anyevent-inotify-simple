@@ -315,7 +315,7 @@ L<http://github.com/jrockway/anyevent-inotify-simple>
 
 Jonathan Rockway C<< <jrockway@cpan.org> >>
 
-Current maintainer is Robert Norris C<< <rob@eatenbyagrue.org> >>
+Current maintainer is Rob N ★ C<< <robn@robn.io> >>
 
 =head1 COPYRIGHT
 

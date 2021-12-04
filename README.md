@@ -52,7 +52,7 @@ Forks welcome!
 
 Jonathan Rockway `<jrockway@cpan.org>`
 
-Current maintainer is Robert Norris `<rob@eatenbyagrue.org>`
+Current maintainer is Rob N ★ `<robn@robn.io>`
 
 # COPYRIGHT
 
