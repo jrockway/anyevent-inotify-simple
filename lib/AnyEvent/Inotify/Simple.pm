@@ -167,9 +167,10 @@ sub handle_event {
     }
 
     if (!$handled){
-        require Data::Dump::Streamer;
+        require Data::Dumper;
+        local $Data::Dumper::Maxdepth = 2;
         Carp::cluck "BUGBUG: Unhandled event: ".
-              Data::Dump::Streamer->Dump($event)->Out;
+              Data::Dumper->Dump($event);
     }
 
 }
